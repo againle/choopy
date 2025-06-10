@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/MyPage',
+  basePath: '/choopy',
   distDir: 'out',
   trailingSlash: true,
 };
