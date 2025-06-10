@@ -10,7 +10,7 @@ async function readMessages(): Promise<string[]> {
     const data = await fs.readFile(filePath, 'utf-8');
     const messages = JSON.parse(data);
     return Array.isArray(messages) ? messages : [];
-  } catch (err) {
+  } catch {
     // File doesn't exist or JSON invalid
     return [];
   }
