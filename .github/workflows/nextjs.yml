@@ -1,9 +1,9 @@
-name: Deploy Next.js site to Pages
+name: Deploy Next.js site to Actions
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["STABLE"]
+    branches: ["onlinedb"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
