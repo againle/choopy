@@ -1,5 +1,5 @@
 import Image from "next/image";
-import NavLinks from "@/ui/home/Nav_link";
+import NavLinks from "@/app/ui/home/Nav_link";
 
 export default function Home() {
   return (
