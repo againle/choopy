@@ -18,3 +18,64 @@ body {
   color: rgb(var(--foreground));
   background: rgb(var(--background));
 }
+
+/* Custom scrollbar styles for letter content */
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+.letter-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.letter-scroll::-webkit-scrollbar-track {
+  background: #fef3c7;
+  border-radius: 4px;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb {
+  background: #f59e0b;
+  border-radius: 4px;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
+
+/* Firefox */
+.letter-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #f59e0b #fef3c7;
+}
+
+/* Smooth scrolling for all browsers */
+.letter-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom font stack for handwritten feel */
+.handwritten {
+  font-family: 'Brush Script MT', cursive, 'Dancing Script', 'Comic Sans MS', cursive;
+}
+
+.serif-text {
+  font-family: 'Georgia', 'Times New Roman', 'Book Antiqua', serif;
+}
+
+/* Text shadow for depth */
+.letter-text {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation for scroll indicator */
+@keyframes gentleBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.gentle-bounce {
+  animation: gentleBounce 2.5s ease-in-out infinite;
+}
