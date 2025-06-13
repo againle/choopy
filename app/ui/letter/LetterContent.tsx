@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 interface Letter {
   id: string;
@@ -17,8 +17,6 @@ interface LetterContentProps {
 }
 
 export default function LetterContent({ letter, onClose }: LetterContentProps) {
-  const [scrollY, setScrollY] = useState(0);
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -30,8 +28,8 @@ export default function LetterContent({ letter, onClose }: LetterContentProps) {
     });
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    setScrollY(e.currentTarget.scrollTop);
+  const handleScroll = () => {
+    // Handle scroll if needed in the future
   };
 
   return (
