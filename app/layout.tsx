@@ -23,19 +23,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen`}>
-        {/* Beautiful toggle button */}
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </head>
+      <body className={`${inter.className} antialiased bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen overflow-x-hidden`}>
+        {/* Mobile-optimized toggle button */}
         <AnimatePresence>
           {!isSidebarOpen && (
             <motion.button
               onClick={toggleSidebar}
-              className="fixed top-6 left-6 z-50 bg-white/90 backdrop-blur-sm hover:bg-white border border-white/20 p-3 rounded-2xl cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 group"
-              aria-label="Toggle navigation"
-              initial={{ opacity: 0, scale: 0.8 }}
+              className="fixed top-4 left-4 z-40 w-12 h-12 bg-white/80 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center hover:bg-white/90 transition-colors touch-manipulation"
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              style={{ touchAction: 'manipulation' }}
+              aria-label="Toggle navigation"
             >
               <div className="relative w-6 h-6 flex flex-col justify-center items-center">
                 <motion.div
@@ -54,9 +59,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   transition={{ duration: 0.3, delay: 0.2 }}
                 />
               </div>
-              
-              {/* Floating sparkles */}
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
             </motion.button>
           )}
         </AnimatePresence>
@@ -64,18 +66,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Show sidebar when open */}
         <SideNav isOpen={isSidebarOpen} onClose={closeSidebar} />
 
-        {/* Main content */}
-        <motion.div
-          className="min-h-screen"
-          animate={{
-            paddingLeft: isSidebarOpen ? "320px" : "0px",
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        >
-          <div className="relative">
+        {/* Main content - Mobile responsive */}
+        <div className={`min-h-screen w-full transition-all duration-300 ${isSidebarOpen ? 'lg:pl-80' : ''}`}>
+          <div className="relative w-full">
             {children}
           </div>
-        </motion.div>
+        </div>
+
+        {/* Mobile overlay when sidebar is open */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <motion.div
+              className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeSidebar}
+            />
+          )}
+        </AnimatePresence>
       </body>
     </html>
   );

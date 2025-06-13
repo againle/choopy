@@ -3,14 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LetterEnvelope, LetterContent, Mailbox, LetterGrid } from '../../ui';
-
-interface Letter {
-  id: string;
-  time: string;
-  title: string;
-  content: string;
-  state: 'read' | 'not read';
-}
+import { loadAllLetters, getUnreadCount, getFirstUnreadLetter, type Letter } from '../../utils/letterUtils';
 
 export default function LetterPage() {
   const [letters, setLetters] = useState<Letter[]>([]);
@@ -27,35 +20,10 @@ export default function LetterPage() {
     const loadLetters = async () => {
       try {
         setLoading(true);
-        // Try multiple possible paths for the JSON file
-        const possiblePaths = [
-          '/choopy/letter.json',  // With basePath
-          '/letter.json',         // Without basePath
-          './letter.json',        // Relative path
-        ];
+        const loadedLetters = await loadAllLetters();
         
-        let data: Letter[] | null = null;
-        let lastError: Error | null = null;
-        
-        for (const path of possiblePaths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) {
-              data = await response.json();
-              break;
-            }
-          } catch (err) {
-            lastError = err as Error;
-            continue;
-          }
-        }
-        
-        if (!data) {
-          throw new Error(`Failed to load letters from any path. Last error: ${lastError?.message}`);
-        }
-        
-        setLetters(data);
-        const unread = data.filter((letter: Letter) => letter.state === 'not read').length;
+        setLetters(loadedLetters);
+        const unread = getUnreadCount(loadedLetters);
         setUnreadCount(unread);
         setShowMailbox(unread > 0);
         setError(null);
@@ -76,7 +44,7 @@ export default function LetterPage() {
 
   const handleMailboxClick = () => {
     if (unreadCount > 0) {
-      const firstUnread = letters.find(letter => letter.state === 'not read');
+      const firstUnread = getFirstUnreadLetter(letters);
       if (firstUnread) {
         setSelectedLetter(firstUnread);
         setShowEnvelope(true);
@@ -142,16 +110,16 @@ export default function LetterPage() {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 overflow-hidden relative">
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-rose-300 rounded-full blur-3xl"></div>
-        <div className="absolute top-32 right-20 w-24 h-24 bg-amber-300 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-orange-300 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 left-10 w-20 sm:w-32 h-20 sm:h-32 bg-rose-300 rounded-full blur-3xl"></div>
+        <div className="absolute top-32 right-10 sm:right-20 w-16 sm:w-24 h-16 sm:h-24 bg-amber-300 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-1/3 w-24 sm:w-40 h-24 sm:h-40 bg-orange-300 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 p-8">
-        {/* Header */}
-        <div className="text-center mb-8">
+      <div className="relative z-10 p-4 sm:p-6 lg:p-8">
+        {/* Header - Mobile Responsive */}
+        <div className="text-center mb-6 sm:mb-8">
           <motion.h1 
-            className="text-4xl font-bold text-amber-800 mb-4"
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-800 mb-4 px-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -162,19 +130,19 @@ export default function LetterPage() {
           {/* Loading State */}
           {loading && (
             <motion.div
-              className="flex justify-center items-center py-12"
+              className="flex justify-center items-center py-8 sm:py-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
-              <span className="ml-3 text-amber-700 font-medium">Loading letters...</span>
+              <div className="animate-spin rounded-full h-8 sm:h-12 w-8 sm:w-12 border-b-2 border-amber-600"></div>
+              <span className="ml-3 text-amber-700 font-medium text-sm sm:text-base">Loading letters...</span>
             </motion.div>
           )}
           
           {/* Error State */}
           {error && (
             <motion.div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 max-w-md mx-auto"
+              className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg mb-4 sm:mb-6 max-w-sm sm:max-w-md mx-auto text-sm sm:text-base"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
             >
@@ -184,28 +152,30 @@ export default function LetterPage() {
           
           {!loading && !error && !showEnvelope && !showContent && (
             <motion.div 
-              className="flex justify-center gap-4 mb-8"
+              className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6 sm:mb-8 px-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
               <button
                 onClick={() => setViewMode('random')}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base touch-manipulation ${
                   viewMode === 'random'
                     ? 'bg-rose-400 text-white shadow-lg transform scale-105'
                     : 'bg-white text-rose-400 border-2 border-rose-400 hover:bg-rose-50'
                 }`}
+                style={{ touchAction: 'manipulation' }}
               >
                 🎲 Random Scatter
               </button>
               <button
                 onClick={() => setViewMode('timeline')}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base touch-manipulation ${
                   viewMode === 'timeline'
                     ? 'bg-amber-400 text-white shadow-lg transform scale-105'
                     : 'bg-white text-amber-400 border-2 border-amber-400 hover:bg-amber-50'
                 }`}
+                style={{ touchAction: 'manipulation' }}
               >
                 📅 Timeline View
               </button>

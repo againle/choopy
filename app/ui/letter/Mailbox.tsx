@@ -11,7 +11,7 @@ interface MailboxProps {
 export default function Mailbox({ unreadCount, onClick }: MailboxProps) {
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4"
       initial={{ scale: 0, rotate: -180 }}
       animate={{ scale: 1, rotate: 0 }}
       exit={{ scale: 0, rotate: 180 }}
@@ -23,16 +23,17 @@ export default function Mailbox({ unreadCount, onClick }: MailboxProps) {
       }}
     >
       <motion.div
-        className="relative cursor-pointer flex flex-col items-center"
+        className="relative cursor-pointer flex flex-col items-center touch-manipulation"
         onClick={onClick}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        style={{ touchAction: 'manipulation' }}
       >
-        {/* Mailbox Base */}
-        <div className="w-32 h-40 bg-gradient-to-b from-blue-600 to-blue-800 rounded-t-3xl rounded-b-lg shadow-2xl relative">
+        {/* Mailbox Base - Mobile Responsive */}
+        <div className="w-24 sm:w-32 h-32 sm:h-40 bg-gradient-to-b from-blue-600 to-blue-800 rounded-t-3xl rounded-b-lg shadow-2xl relative">
           {/* Mailbox Door */}
           <motion.div
-            className="absolute inset-x-2 top-8 bottom-4 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl border-2 border-blue-400"
+            className="absolute inset-x-2 top-6 sm:top-8 bottom-3 sm:bottom-4 bg-gradient-to-b from-blue-500 to-blue-700 rounded-2xl border-2 border-blue-400"
             animate={{ 
               rotateX: unreadCount > 0 ? -15 : 0,
             }}
@@ -42,10 +43,10 @@ export default function Mailbox({ unreadCount, onClick }: MailboxProps) {
             transition={{ duration: 0.3 }}
           >
             {/* Door Handle */}
-            <div className="absolute right-2 top-1/2 w-2 h-4 bg-yellow-400 rounded-full transform -translate-y-1/2"></div>
+            <div className="absolute right-1.5 sm:right-2 top-1/2 w-1.5 sm:w-2 h-3 sm:h-4 bg-yellow-400 rounded-full transform -translate-y-1/2"></div>
             
             {/* Mail Slot */}
-            <div className="absolute inset-x-4 top-6 h-1 bg-blue-900 rounded-full"></div>
+            <div className="absolute inset-x-3 sm:inset-x-4 top-4 sm:top-6 h-0.5 sm:h-1 bg-blue-900 rounded-full"></div>
           </motion.div>
           
           {/* Mailbox Flag */}

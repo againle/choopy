@@ -35,7 +35,7 @@ export default function SideNav({ onClose, isOpen = true }: SideNavProps) {
           
           {/* Sidebar */}
           <motion.div
-            className="fixed top-0 left-0 h-full w-80 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 shadow-2xl z-50 overflow-hidden"
+            className="fixed top-0 left-0 h-full w-80 lg:w-80 sm:w-72 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 shadow-2xl z-50 overflow-hidden"
             initial={{ x: -320 }}
             animate={{ x: 0 }}
             exit={{ x: -320 }}
