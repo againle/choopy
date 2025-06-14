@@ -122,7 +122,7 @@ export default function LetterContent({ letter, onClose }: LetterContentProps) {
                       downloadUrl = path;
                       break;
                     }
-                  } catch (err) {
+                  } catch {
                     continue;
                   }
                 }
