@@ -11,3 +11,7 @@ export { default as LetterGrid } from './letter/LetterGrid';
 
 // Home Components
 export { default as NavLink } from './home/Nav_link';
+
+// Music Components
+export { default as MusicDisk } from './MusicDisk';
+export { default as MusicPlayerCard } from './MusicPlayerCard';

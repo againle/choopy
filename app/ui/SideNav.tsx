@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SideNavProps {
   onClose?: () => void; 
@@ -19,6 +20,12 @@ const navItems = [
 
 export default function SideNav({ onClose, isOpen = true }: SideNavProps) {
   const pathname = usePathname();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    if (onClose) onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -153,7 +160,24 @@ export default function SideNav({ onClose, isOpen = true }: SideNavProps) {
             </nav>
             
             {/* Footer */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
+            <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">
+              {/* Logout button */}
+              <motion.button
+                onClick={handleLogout}
+                className="w-full bg-gradient-to-r from-red-400 to-pink-400 hover:from-red-500 hover:to-pink-500 text-white rounded-2xl p-3 transition-all duration-300 shadow-lg hover:shadow-xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="flex items-center justify-center space-x-2">
+                  <span className="text-lg">🔒</span>
+                  <span className="font-semibold">Lock & Exit</span>
+                </div>
+              </motion.button>
+              
+              {/* Welcome message */}
               <motion.div
                 className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
                 initial={{ opacity: 0, y: 20 }}

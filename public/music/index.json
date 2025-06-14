@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "name": "Ambient",
+      "tracks": [
+        {
+          "id": "ambient-001",
+          "title": "Sample1 Ambient Track",
+          "artist": "Ambient Artist",
+          "filename": "sample1.mp3",
+          "group": "Ambient"
+        },
+        {
+          "id": "ambient-002",
+          "title": "Sample2 Ambient Track",
+          "artist": "Ambient Artist",
+          "filename": "sample2.mp3",
+          "group": "Ambient"
+        }
+      ]
+    }
+  ]
+}
