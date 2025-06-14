@@ -72,7 +72,7 @@ export default function MusicPlayerCard({ onClose }: MusicPlayerCardProps) {
             ].map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key as any)}
+                onClick={() => setActiveTab(tab.key as 'player' | 'playlist' | 'groups')}
                 className={`flex-1 px-3 py-2 rounded-md text-sm transition-all ${
                   activeTab === tab.key
                     ? 'bg-white/30 text-white shadow-sm'

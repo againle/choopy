@@ -8,7 +8,6 @@ import {
   PlaylistState,
   loadMusicIndex,
   createPlaylistFromGroups,
-  addGroupToPlaylist,
   removeGroupFromPlaylist,
   getNextTrack,
   getPreviousTrack
@@ -180,7 +179,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     if (state.currentTrack && !newPlaylist.find(track => track.id === state.currentTrack?.id)) {
       dispatch({ type: 'SET_CURRENT_TRACK', payload: { track: null, index: -1 } });
     }
-  }, [groups, state.selectedGroups]);
+  }, [groups, state.selectedGroups, state.currentTrack]);
 
   // Update audio source when current track changes
   useEffect(() => {
@@ -199,7 +198,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         audioRef.current.play().catch(console.error);
       }
     }
-  }, [state.currentTrack]);
+  }, [state.currentTrack, state.isPlaying]);
 
   // Update volume
   useEffect(() => {
