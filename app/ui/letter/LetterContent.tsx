@@ -98,6 +98,69 @@ export default function LetterContent({ letter, onClose }: LetterContentProps) {
         >
           <span className="text-sm sm:text-base font-bold leading-none select-none">✕</span>
         </motion.button>
+
+        {/* Download Button - Mobile Optimized */}
+        <motion.button
+          className="absolute top-3 right-16 sm:top-6 sm:right-20 z-50 w-10 h-10 sm:w-12 sm:h-12 bg-amber-600 hover:bg-amber-700 text-white rounded-full flex items-center justify-center shadow-lg transition-colors cursor-pointer touch-manipulation"
+          onClick={() => {
+            // Handle download with proper path resolution for static builds
+            const handleDownload = async () => {
+              try {
+                // Try multiple possible paths for the docx file
+                const possiblePaths = [
+                  `/choopy/download/${letter.id}.docx`,  // With basePath
+                  `/download/${letter.id}.docx`,         // Without basePath
+                  `./download/${letter.id}.docx`,        // Relative path
+                ];
+                
+                let downloadUrl = '';
+                
+                for (const path of possiblePaths) {
+                  try {
+                    const response = await fetch(path, { method: 'HEAD' });
+                    if (response.ok) {
+                      downloadUrl = path;
+                      break;
+                    }
+                  } catch (err) {
+                    continue;
+                  }
+                }
+                
+                if (downloadUrl) {
+                  const link = document.createElement('a');
+                  link.href = downloadUrl;
+                  link.download = `${letter.id}.docx`;
+                  link.target = '_blank'; // Open in new tab as fallback
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                } else {
+                  // Fallback: try to open the file directly
+                  window.open(`/download/${letter.id}.docx`, '_blank');
+                }
+              } catch (error) {
+                console.error('Download failed:', error);
+                // Final fallback: try to open the file directly
+                window.open(`/download/${letter.id}.docx`, '_blank');
+              }
+            };
+            
+            handleDownload();
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          initial={{ opacity: 0, rotate: -90 }}
+          animate={{ opacity: 1, rotate: 0 }}
+          transition={{ delay: 0.6 }}
+          style={{ 
+            pointerEvents: 'auto',
+            touchAction: 'manipulation'
+          }}
+          title="Download letter"
+        >
+          <span className="text-sm sm:text-base font-bold leading-none select-none">⬇</span>
+        </motion.button>
         
         {/* Scrollable Content Container - Mobile Responsive */}
         <div 
@@ -127,19 +190,7 @@ export default function LetterContent({ letter, onClose }: LetterContentProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <p className="text-base sm:text-lg text-gray-800 font-serif">Dear Friend,</p>
-          </motion.div>
-          
-          {/* Letter Title */}
-          <motion.div
-            className="mb-8 sm:mb-10 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 font-serif underline decoration-gray-400 decoration-2 underline-offset-4">
-              {letter.title}
-            </h1>
+            
           </motion.div>
           
           {/* Letter Content */}
@@ -178,9 +229,6 @@ export default function LetterContent({ letter, onClose }: LetterContentProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0 }}
           >
-            <p className="text-base sm:text-lg text-gray-800 font-serif mb-4">
-              Warm regards,
-            </p>
           </motion.div>
           
           {/* Letter Signature Area */}
@@ -191,9 +239,6 @@ export default function LetterContent({ letter, onClose }: LetterContentProps) {
             transition={{ delay: 1.2 }}
           >
             <div className="w-32 sm:w-48 h-0.5 bg-gray-400 ml-auto mb-4"></div>
-            <p className="text-gray-700 font-serif italic text-base sm:text-lg">
-              Choopy
-            </p>
           </motion.div>
           
           {/* Bottom spacing for scroll */}
